@@ -1,0 +1,11 @@
+#Creates a custom elytron Realm and initialize one guest identity with guest/password
+/subsystem=elytron/custom-realm=teleforum-realm:add(module=teleforum-realm-module, class-name=it.eustema.enterprise.teleforum.teleforumrealm.TeleforumRealm, configuration={"guest" => "password"})
+#Defines a Security Domain named example-domain based om the example-realm
+/subsystem=elytron/security-domain=teleforum-domain:add(realms=[{realm=teleforum-realm}], default-realm=teleforum-realm, permission-mapper=default-permission-mapper)
+
+
+#creates an HTTP Authentication factory based on the example-domain which uses HTTP Basic authentication
+/subsystem=elytron/http-authentication-factory=teleforum-http-auth:add(http-server-mechanism-factory=global, security-domain=teleforum-domain, mechanism-configurations=[{mechanism-name=BASIC, mechanism-realm-configurations=[{realm-name=teleforum-domain}]}])
+
+#Adds the example-domain to undertow's security domain
+/subsystem=undertow/application-security-domain=teleforum-domain:add(http-authentication-factory=teleforum-http-auth)

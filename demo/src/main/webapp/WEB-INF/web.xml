@@ -1,0 +1,35 @@
+<web-app xmlns="http://java.sun.com/xml/ns/j2ee">
+    <!--    <filter-mapping>-->
+    <!--        <filter-name>AuthenticationFilter</filter-name>-->
+    <!--        <url-pattern>/*</url-pattern>-->
+    <!--    </filter-mapping>-->
+
+    <session-config>
+        <session-timeout>60</session-timeout>
+        <cookie-config>
+            <name>TELEFORUM_JSESSIONID</name>
+            <http-only>true</http-only>
+        </cookie-config>
+        <tracking-mode>COOKIE</tracking-mode>
+    </session-config>
+
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>Protected Area</web-resource-name>
+            <url-pattern>/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>Guest</role-name>
+        </auth-constraint>
+    </security-constraint>
+
+    <login-config>
+        <auth-method>BASIC</auth-method>
+        <realm-name>TeleforumRealm</realm-name>
+    </login-config>
+
+    <security-role>
+        <role-name>Guest</role-name>
+        <role-name>Admin</role-name>
+    </security-role>
+</web-app>

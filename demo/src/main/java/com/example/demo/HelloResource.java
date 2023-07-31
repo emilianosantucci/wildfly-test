@@ -7,6 +7,9 @@ import jakarta.ejb.EJBContext;
 import jakarta.ejb.LocalBean;
 import jakarta.ejb.SessionContext;
 import jakarta.ejb.Stateless;
+import jakarta.servlet.annotation.HttpConstraint;
+import jakarta.servlet.annotation.ServletSecurity;
+import jakarta.servlet.annotation.WebFilter;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
@@ -41,9 +44,20 @@ public class HelloResource {
 
     @GET
     @Path("/admin")
-    @RolesAllowed({"Admin"})
+    @RolesAllowed({"Admin", "Guest"})
     @Produces("text/plain")
     public String secured(){
+//        return "Secured";
+        return sessionContext == null ?
+                "No session context! " :
+                "Hello " + sessionContext.getCallerPrincipal().getName() + "!";
+    }
+
+    @GET
+    @Path("/youShouldNotPass")
+    @RolesAllowed({"Pippo"})
+    @Produces("text/plain")
+    public String youShouldNotPass(){
 //        return "Secured";
         return sessionContext == null ?
                 "No session context! " :

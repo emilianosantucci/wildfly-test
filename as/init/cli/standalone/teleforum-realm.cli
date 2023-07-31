@@ -1,0 +1,27 @@
+set projectpath=/srv/init/cli/standalone
+
+batch
+
+#Add module for the custom realm
+module add --name=TeleforumRealmModule --resources=$projectpath/teleforum-realm-1.0-SNAPSHOT.jar --dependencies=org.wildfly.security.elytron
+
+#/subsystem=elytron/custom-realm=TeleforumRealm:add(class-name=it.eustema.enterprise.teleforum.teleforumrealm.TeleforumRealm, module=TeleforumRealmModule)
+
+# Cacheable
+/subsystem=elytron/custom-realm=TeleforumRealm:add(class-name=it.eustema.enterprise.teleforum.teleforumrealm.TeleforumRealm, module=TeleforumRealmModule)
+
+/subsystem=elytron/security-domain=TeleforumDomain:add(realms=[{realm=TeleforumRealm}],default-realm=TeleforumRealm,permission-mapper=default-permission-mapper)
+
+#creates an HTTP Authentication factory based on the example-domain which uses HTTP Basic authentication
+/subsystem=elytron/http-authentication-factory=TeleforumHttpAuth:add(http-server-mechanism-factory=global, security-domain=TeleforumDomain, mechanism-configurations=[{mechanism-name=BASIC, mechanism-realm-configurations=[{realm-name=TeleforumDomain}]}])
+
+#Adds the example-domain to undertow's security domain
+/subsystem=undertow/application-security-domain=TeleforumDomain:add(http-authentication-factory=TeleforumHttpAuth)
+
+#/subsystem=undertow/application-security-domain=TeleforumDomain:add(security-domain=TeleforumDomain)
+
+/subsystem=ejb3/application-security-domain=TeleforumDomain:add(security-domain=TeleforumDomain)
+
+run-batch
+
+reload

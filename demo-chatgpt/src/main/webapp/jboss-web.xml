@@ -1,0 +1,3 @@
+<jboss-web>
+    <security-domain>TeleforumDomain</security-domain>
+</jboss-web>

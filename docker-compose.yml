@@ -1,0 +1,15 @@
+services:
+    as:
+        build: .
+        entrypoint: ["/opt/jboss/wildfly/bin/standalone.sh","-b","0.0.0.0","-bmanagement","0.0.0.0",";","/srv/bin/init.sh"]
+        volumes:
+            - ./as:/srv
+        networks:
+            - private
+        ports:
+            - "8080:8080"
+            - "9990:9990"
+            - "8787:8787"
+            - "8443:8443"
+networks:
+    private:
